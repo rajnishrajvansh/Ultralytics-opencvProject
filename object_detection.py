@@ -2,55 +2,56 @@ import cv2
 import json
 from ultralytics import YOLO
 import matplotlib.pyplot as plt
+import os
 
-# Load YOLOv8 pretrained model
-model = YOLO('yolov8n.pt')  # YOLOv8 Nano model (lightweight and fast)
-
-# Load an image
-image_path = 'input_image1.jpg'  # Replace with the path to your image
+model = YOLO('yolov9m.pt')  
+image_path = 'crowd.jpg' 
 image = cv2.imread(image_path)
-
-# Perform object detection
+output_dir = "cropped_images"
+os.makedirs(output_dir, exist_ok=True)
 results = model.predict(image)
-
-# Prepare the JSON output structure
 detection_output = []
 
-# Process detected objects
 for idx, box in enumerate(results[0].boxes, start=1):
-    bbox = box.xyxy[0].cpu().numpy()  # Bounding box coordinates [x1, y1, x2, y2]
-    conf = box.conf.cpu().item()      # Confidence score
-    cls = int(box.cls.cpu().item())   # Class ID
-    label = model.names[cls]          # Class name
+    bbox = box.xyxy[0].cpu().numpy() 
+    conf = box.conf.cpu().item()      
+    cls = int(box.cls.cpu().item())  
+    label = model.names[cls]         
 
-    # Draw the bounding box
     x1, y1, x2, y2 = map(int, bbox)
     cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
     cv2.putText(image, f"{label} {conf:.2f}", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-    # Add to JSON output
+    cropped_object = image[y1:y2, x1:x2]
+    cropped_path = os.path.join(output_dir, f"{label}_{idx}.jpg")
+    cv2.imwrite(cropped_path, cropped_object)
+  
+    sub_objects = [] 
+
     detection_output.append({
         "object": label,
         "id": idx,
         "bbox": [x1, y1, x2, y2],
-        "subobject": None  # Placeholder for sub-objects if any
+        "subobject": [
+            {
+                "object": sub_label, 
+                "id": sub_idx,
+                "bbox": [sx1, sy1, sx2, sy2]  
+            } for sub_idx, (sub_label, sx1, sy1, sx2, sy2) in enumerate(sub_objects, start=1)
+        ]
     })
 
-# Save JSON output to a file
-output_json_path = "detection_output2.json"
+output_json_path = "detection_output_with_subobjects.json"
 with open(output_json_path, "w") as json_file:
     json.dump(detection_output, json_file, indent=4)
 
 print(f"Detection output saved as {output_json_path}")
 
-# Convert BGR to RGB for visualization
 image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-# Display the image
 plt.imshow(image_rgb)
 plt.axis("off")
 plt.show()
 
-# Save the processed image
-cv2.imwrite("output1.jpg", image)
-print("Processed image saved as output_image.jpg")
+cv2.imwrite("output_image_with_boxes.jpg", image)
+print("Processed image saved as output_image_with_boxes.jpg")
