@@ -1,0 +1,24 @@
+[
+    {
+        "object": "dog",
+        "id": 1,
+        "bbox": [
+            151,
+            67,
+            432,
+            356
+        ],
+        "subobject": null
+    },
+    {
+        "object": "cat",
+        "id": 2,
+        "bbox": [
+            150,
+            157,
+            289,
+            355
+        ],
+        "subobject": null
+    }
+]

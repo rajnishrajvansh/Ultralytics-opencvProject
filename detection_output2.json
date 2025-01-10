@@ -1,0 +1,68 @@
+[
+    {
+        "object": "zebra",
+        "id": 1,
+        "bbox": [
+            361,
+            222,
+            471,
+            313
+        ],
+        "subobject": null
+    },
+    {
+        "object": "elephant",
+        "id": 2,
+        "bbox": [
+            300,
+            118,
+            439,
+            246
+        ],
+        "subobject": null
+    },
+    {
+        "object": "sheep",
+        "id": 3,
+        "bbox": [
+            112,
+            269,
+            176,
+            319
+        ],
+        "subobject": null
+    },
+    {
+        "object": "bird",
+        "id": 4,
+        "bbox": [
+            275,
+            76,
+            325,
+            114
+        ],
+        "subobject": null
+    },
+    {
+        "object": "bird",
+        "id": 5,
+        "bbox": [
+            204,
+            106,
+            249,
+            121
+        ],
+        "subobject": null
+    },
+    {
+        "object": "cow",
+        "id": 6,
+        "bbox": [
+            515,
+            226,
+            601,
+            291
+        ],
+        "subobject": null
+    }
+]
